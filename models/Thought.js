@@ -36,9 +36,9 @@ const reactionSchema = new Schema(
 reactionSchema
   .virtual('formatTimeStamp')
   .get(function () {
-    const localeTime = this.createAt.toLocaleTimeString();
-    const localeDate = this.createdAt.tolocalDateString();
-    return localeDate.concat(" ", localeDate);
+    const localeTime = this.createdAt.toLocaleTimeString();
+    const localeDate = this.createdAt.toLocaleDateString();
+    return localeDate.concat(" ", localeTime);
   });
 
 // Schema for what makes up a thought.
@@ -80,9 +80,9 @@ thoughtSchema.virtual('reactionCount').get(function () {
 thoughtSchema
   .virtual('formatTimeStamp')
   .get(function () {
-    const localeTime = this.createAt.toLocaleTimeString();
-    const localeDate = this.createdAt.tolocalDateString();
-    return localeDate.concat(" ", localeDate);
+    const localeTime = this.createdAt.toLocaleTimeString();
+    const localeDate = this.createdAt.toLocaleDateString();
+    return localeDate.concat(" ", localeTime);
   });
 
 // Initialize the thought model.

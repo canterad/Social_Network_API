@@ -1,29 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Function: ValidateEmail - This function validates the email address entered.  It returns true if the
-// email address is formatted correctly, otherwise it returns a message about what is wrong.
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-function ValidateEmail(input)
-{
-  let szTemp = input.trim();
-
-  if (szTemp.length === 0)
-  {
-    return "You must enter a value.";
-  }
-
-  let regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (szTemp.match(regex))
-  {
-    return true;
-  }
-  else
-  {
-    return "Please enter a valid email address.";
-  }
-}
-
 // Schema for what makes up a user.
 const userSchema = new Schema({
     username: 
@@ -38,7 +14,12 @@ const userSchema = new Schema({
       type: String,
       required: true,
       unique: true,
-      validate: ValidateEmail 
+      validate: {
+        validator: function(v) {
+            return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+        },
+        message: "Please enter a valid email"
+      },      
     },
     thoughts: [
       {

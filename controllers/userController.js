@@ -1,31 +1,3 @@
-/*********************************************************************************
-// ORIGINAL CODE BELOW:
-const { Post } = require('../models');
-
-module.exports = {
-  getPosts(req, res) {
-    Post.find()
-      .then((posts) => res.json(posts))
-      .catch((err) => res.status(500).json(err));
-  },
-  getSinglePost(req, res) {
-    Post.findOne({ _id: req.params.postId })
-      .then((post) =>
-        !post
-          ? res.status(404).json({ message: 'No post with that ID' })
-          : res.json(post)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-  // create a new post
-  createPost(req, res) {
-    Post.create(req.body)
-      .then((dbPostData) => res.json(dbPostData))
-      .catch((err) => res.status(500).json(err));
-  },
-};
-*************************************************************************************/
-
 const { Thought, User } = require('../models');
 
 module.exports = {
@@ -34,8 +6,11 @@ module.exports = {
   ////////////////////////////////////////////////////////////////////////////////////
   getUsers(req, res) {
     User.find()
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+    .then((users) => res.json(users))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
   
   /////////////////////////////////////////////////////////////////////////////////////
@@ -43,15 +18,18 @@ module.exports = {
   /////////////////////////////////////////////////////////////////////////////////////
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
-      .select('-__v')
-      .populate('thoughts')
-      .populate('friends')
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user with that ID!' })
-          : res.json(user)
-      )
-      .catch((err) => res.status(500).json(err));
+    .select('-__v')
+    .populate('thoughts')
+    .populate('friends')
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with that ID!' })
+        : res.json(user)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -59,8 +37,11 @@ module.exports = {
   ////////////////////////////////////////////////////////////////////////////////////
   createUser(req, res) {
     User.create(req.body)
-      .then((dbUserData) => res.json(dbUserData))
-      .catch((err) => res.status(500).json(err));
+    .then((dbUserData) => res.json(dbUserData))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -68,13 +49,16 @@ module.exports = {
   ////////////////////////////////////////////////////////////////////////////////////
   deleteUser(req, res) {
     User.findOneAndDelete({ _id: req.params.userId })
-      .then((user) =>
-        !user
-          ? res.status(404).json({ message: 'No user with that ID!' })
-          : Thought.deleteMany({ _id: { $in: user.thoughts} })
-      )
-      .then(() => res.json({ message: 'User and associated thoughts deleted!'}))
-      .catch((err) => res.status(500).json(err));
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with that ID!' })
+        : Thought.deleteMany({ _id: { $in: user.thoughts} })
+    )
+    .then(() => res.json({ message: 'User and associated thoughts deleted!'}))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -87,13 +71,16 @@ module.exports = {
         { _id: req.params.userId },
         { $set: req.body },
         { runValidators: true, new: true }
-      )
-        .then((user) =>
-          !user
-            ? res.status(404).json({ message: 'No user with this id!'})
-            : res.json(user)
-        )
-        .catch((err) => res.status(500).json(err));        
+    )
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with this id!'})
+        : res.json(user)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
 
   ////////////////////////////////////////////////////////////////////////////////////
@@ -104,13 +91,16 @@ module.exports = {
         { _id: req.params.userId },
         { $push: { friends: req.params.friendId} },
         { runValidators: true, new: true }
-      )
-        .then((user) =>
-          !user
-            ? res.status(404).json({ message: 'No user with this id!'})
-            : res.json(user)
-        )
-        .catch((err) => res.status(500).json(err));        
+    )
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with this id!'})
+        : res.json(user)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },
 
   ///////////////////////////////////////////////////////////////////////////////////
@@ -121,12 +111,15 @@ module.exports = {
         { _id: req.params.userId },
         { $pull: { friends: req.params.friendId} },
         { runValidators: true, new: true }
-      )
-        .then((user) =>
-          !user
-            ? res.status(404).json({ message: 'No user with this id!'})
-            : res.json(user)
-        )
-        .catch((err) => res.status(500).json(err));        
+    )
+    .then((user) =>
+      !user
+      ? res.status(404).json({ message: 'No user with this id!'})
+      : res.json(user)
+    )
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json(err);    
+    });
   },  
 };
